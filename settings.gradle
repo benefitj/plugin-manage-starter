@@ -1,0 +1,22 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'plugin-manage-starter'
+
+/**
+ * core
+ */
+include ":core"
+/**
+ * 公共依赖
+ */
+include ":commons"
+
+/**
+ * 样例
+ */
+include ":examples:spring-web-starter", ":examples:vertx-web-starter"
+
