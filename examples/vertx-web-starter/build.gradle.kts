@@ -37,7 +37,7 @@ dependencies {
   implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
   implementation("io.vertx:vertx-web")
   //implementation("io.vertx:vertx-web-client")
-  implementation("io.vertx:vertx-mqtt")
+  //implementation("io.vertx:vertx-mqtt")
   //implementation("io.vertx:vertx-hazelcast")
   implementation("com.alibaba:fastjson:1.2.75")
 
@@ -69,3 +69,4 @@ tasks.withType<Test> {
 tasks.withType<JavaExec> {
   args = listOf("run", mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$launcherClassName", "--on-redeploy=$doOnChange")
 }
+

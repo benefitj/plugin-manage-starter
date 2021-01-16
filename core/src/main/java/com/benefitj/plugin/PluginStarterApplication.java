@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -19,7 +20,6 @@ public class PluginStarterApplication {
 //    SpringApplication.run(PluginStarterApplication.class, args);
 
     // Main-Class
-    // vertx-iot-stater-1.0.0-SNAPSHOT.jar
     File pluginDir = new File("./plugin-libs");
     List<File> jarFiles = Stream.of(Objects.requireNonNull(pluginDir.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".jar"))))
         .filter(File::isFile)
@@ -41,13 +41,20 @@ public class PluginStarterApplication {
 
   private static void startPlugin(PluginJarFile jarFile, ClassLoader mainClassLoader) {
     Thread jarThread = new Thread(() -> {
+      boolean successful = false;
+      final List<Exception> errors = new LinkedList<>();
       try {
         PluginJarClassLoader classLoader = new PluginJarClassLoader(new URL[]{jarFile.getUrl()}, mainClassLoader);
         Class<?> clazz = classLoader.loadClass(jarFile.getMainClass());
         Method mainMethod = clazz.getMethod("main", String[].class);
         mainMethod.invoke(null, new Object[]{new String[0]});
+        successful = true;
       } catch (Exception e) {
-        e.printStackTrace();
+        errors.add(e);
+      } finally {
+        // 打印
+        errors.forEach(Throwable::printStackTrace);
+        System.err.println("[" + jarFile.getJarName() + "]启动结果: " + successful);
       }
     });
     String name = jarFile.getJarName();

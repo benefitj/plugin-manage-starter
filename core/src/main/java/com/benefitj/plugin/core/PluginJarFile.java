@@ -1,5 +1,6 @@
 package com.benefitj.plugin.core;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -10,17 +11,19 @@ import java.util.jar.Manifest;
 public class PluginJarFile extends JarFile {
 
   public static final String MAIN_CLASS = "Main-Class";
-
+  /**
+   * URL
+   */
   private final URL url;
   /**
-   * 根路径
+   * jar包文件
    */
   private final File jar;
 
   public PluginJarFile(File jar) throws IOException {
     super(jar);
     this.jar = jar;
-    this.url = jar.toURL();
+    this.url = jar.toURI().toURL();
   }
 
   public File getJar() {
@@ -71,6 +74,7 @@ public class PluginJarFile extends JarFile {
   /**
    * 获取主类
    */
+  @Nullable
   public String getMainClass() {
     return this.getMainAttributeValue(MAIN_CLASS);
   }
